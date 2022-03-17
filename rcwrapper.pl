@@ -19,7 +19,7 @@ my $normal = "\e[0m";
 (my $usage = <<OUT) =~ s/\t+//g;
 This script will do readcount for tumor and normal bam based on an input vcf file for hotspot mutations. 
 Pipeline version: $version
-$yellow     Usage: perl $0  --rdir --vcf --ref --log --groupname --users --q --step
+$yellow     Usage: perl $0  --rdir --ref --log --groupname --users --q --step
 
 $normal
 
@@ -64,15 +64,12 @@ my $log_dir="";
 my $h38_REF="";
 my $q_name="";
 my $chr_status=0;
-my $f_vcf; 
-my $f_vcf_cut;
 my $compute_username="";
 my $group_name="";
 
 my $status = &GetOptions (
       "step=i" => \$step_number,
       "rdir=s" => \$run_dir,
-      "vcf=s" => \$f_vcf,
       "groupname=s" => \$group_name,
       "users=s" => \$compute_username,
       "ref=s"  => \$h38_REF,
@@ -84,7 +81,7 @@ my $status = &GetOptions (
 print $group_name,"\n"; 
 print $compute_username, "\n"; 
 
-if ($help || $run_dir eq "" || $log_dir eq ""  || $f_vcf eq "" || $group_name eq "" || $compute_username eq "" || $step_number<0 || $step_number>8) {
+if ($help || $run_dir eq "" || $log_dir eq ""  || $group_name eq "" || $compute_username eq "" || $step_number<0 || $step_number>8) {
       print $usage;
       exit;
    }
@@ -145,23 +142,6 @@ my $bamrc="/storage1/fs1/songcao/Active/Software/bam-readcount/0.7.4/bam-readcou
 #my $f_vcf = $script_dir."/hotspot.tcga.driver.chr.pos.tsv";
 #my $f_mut_tcga_hotspot = $script_dir."/liftover_hg38.tcga.driver.gene.mut";
 
-$f_vcf_cut = $f_vcf.".cut"; 
-open(OUT,">$f_vcf_cut"); 
-my %chrpos; 
-my $chrpos2; 
-foreach my $l (`cat $f_vcf`) 
-{
-my $ltr=$l;
-my @t=split("\t",$ltr);  
-$chrpos2=$t[0]."-".$t[1]."-".$t[2];
-if(!defined $chrpos{$chrpos2})
-{
-print OUT $t[0],"\t",$t[1],"\t",$t[2],"\n"; 
-}
-
-}
-
-close OUT; 
 
 my $first_line=`head -n 1 $h38_REF`; 
 
@@ -260,6 +240,7 @@ sub bsub_rc{
     $current_job_file = "j1_rc_".$sample_name.".sh";
     my $lsf_out=$lsf_file_dir."/".$current_job_file.".out";
     my $lsf_err=$lsf_file_dir."/".$current_job_file.".err";
+
  
    if(-e $lsf_out)
     {
@@ -269,6 +250,25 @@ sub bsub_rc{
     }
     my $IN_bam_T = $sample_full_path."/".$sample_name.".T.bam";
     my $IN_bam_N = $sample_full_path."/".$sample_name.".N.bam";
+    my $f_vcf = $sample_full_path."/".$sample_name.".rc.vcf";
+    my $f_vcf_cut =$f_vcf.".cut";
+
+    open(OUT,">$f_vcf_cut");
+    my %chrpos;
+    my $chrpos2;
+    foreach my $l (`cat $f_vcf`)
+    {
+     my $ltr=$l;
+     my @t=split("\t",$ltr);
+     $chrpos2=$t[0]."-".$t[1]."-".$t[2];
+     if(!defined $chrpos{$chrpos2})
+     {
+     print OUT $t[0],"\t",$t[1],"\t",$t[2],"\n";
+     }
+
+    }
+    close OUT;
+
     my $f_rc_t_out = $sample_full_path."/".$sample_name.".T.rc.tsv";
     my $f_rc_n_out = $sample_full_path."/".$sample_name.".N.rc.tsv";
     my $f_vaf_t_out = $sample_full_path."/".$sample_name.".T.rc.vaf";
