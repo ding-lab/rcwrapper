@@ -1,5 +1,4 @@
-#  the input bam without readgroup information #	
-### updated 1/9/2018 ###
+### Song Cao ##
 #!/usr/bin/perl
 use strict;
 use warnings;
@@ -17,7 +16,7 @@ my $normal = "\e[0m";
 #usage information
 
 (my $usage = <<OUT) =~ s/\t+//g;
-This script will do readcount for tumor and normal bam based on an input vcf file for hotspot mutations. 
+This script will do readcount for tumor and normal bam based on an input vcf file. 
 Pipeline version: $version
 $yellow     Usage: perl $0  --rdir --ref --log --groupname --users --q --step
 
@@ -42,16 +41,6 @@ $red         	 [1]  Run bamreadcount
 $normal
 OUT
 
-#die $usage unless @ARGV == 2;
-#my ( $run_dir, $step_number ) = @ARGV;
-#if ($run_dir =~/(.+)\/$/) {
-#    $run_dir = $1;
-#}
-#die $usage unless ($step_number >=0)&&(($step_number <= 10));
-#GENOMEVIP_SCRIPTS=/gscmnt/gc2525/dinglab/rmashl/Software/bin/genomevip
-# obtain script path
-#my $run_script_path = `dirname $0`;
-#__DEFAULT NUMBER OF BINS IE (MUST BE INTEGER)
 my $step_number = -1;
 my $status_rg = 1;
 my $status_rerun=0;
@@ -151,7 +140,7 @@ opendir(DH, $run_dir) or die "Cannot open dir $run_dir: $!\n";
 my @sample_dir_list = readdir DH;
 close DH;
 
-if ($step_number < 8) {
+if ($step_number < 2) {
     for (my $i=0;$i<@sample_dir_list;$i++) {#use the for loop instead. the foreach loop has some problem to pass the global variable $sample_name to the sub functions
         $sample_name = $sample_dir_list[$i];
         if (!($sample_name =~ /\./ || $sample_name=~/worklog/)) {
