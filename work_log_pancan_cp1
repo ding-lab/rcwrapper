@@ -1,0 +1,3 @@
+perl  rcwrapper.pl --rdir /storage1/fs1/dinglab/Active/Projects/scao/ch/pancan/rc1 --log /storage1/fs1/dinglab/Active/Projects/scao/ch/pancan/rc1.log  --ref /storage1/fs1/songcao/Active/Database/hg38_database/GRCh38.d1.vd1/GRCh38.d1.vd1.fa --users songcao --groupname GermlineWXS --q general --step 1
+
+perl  rcwrapper.pl --rdir /storage1/fs1/dinglab/Active/Projects/scao/ch/pancan/rc1 --log /storage1/fs1/dinglab/Active/Projects/scao/ch/pancan/rc1.log  --ref /storage1/fs1/songcao/Active/Database/hg38_database/GRCh38.d1.vd1/GRCh38.d1.vd1.fa --users songcao --groupname GermlineWXS --q general --step 2

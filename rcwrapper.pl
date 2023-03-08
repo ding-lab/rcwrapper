@@ -35,9 +35,9 @@ GDC HG38: /storage1/fs1/songcao/Active/Database/hg38_database/GRCh38.d1.vd1/GRCh
 <run_folder> = full path of the folder holding files for this sequence run
 <step_number> run this pipeline step by step. (running the whole pipeline if step number is 0)
 
-$red      	 [0]  Do bam index if index file is not existing  
-$red         	 [1]  Run bamreadcount
-
+$red [0]  Do bam index if index file is not existing  
+$red [1]  Run bamreadcount
+$red [2] generate report
 $normal
 OUT
 
@@ -158,6 +158,31 @@ if ($step_number < 2) {
 	}
 }
 }   
+
+if($step_number==2)
+    {
+
+    print $yellow, "Submitting jobs for generating the report for the run ....",$normal, "\n";
+    $hold_job_file=$current_job_file; 
+    $current_job_file = "j12_Run_report_".$working_name.".sh"; 
+    my $lsf_out=$lsf_file_dir."/".$current_job_file.".out";
+    my $lsf_err=$lsf_file_dir."/".$current_job_file.".err";
+    `rm $lsf_out`;
+    `rm $lsf_err`;
+    `rm $current_job_file`;
+    my $working_name= (split(/\//,$run_dir))[-1];
+    open(REPRUN, ">$job_files_dir/$current_job_file") or die $!;
+    print REPRUN "#!/bin/bash\n";
+    print REPRUN "		".$run_script_path."generate_final_report.pl ".$run_dir."\n";
+    close REPRUN;
+
+    my $sh_file=$job_files_dir."/".$current_job_file;
+
+    $bsub_com = "bsub -g /$compute_username/$group_name -q $q_name -n 1 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(scao/dailybox)\' -o $lsf_out -e $lsf_err bash $sh_file\n";
+
+    print $bsub_com;
+    system ($bsub_com);
+}
 
 sub bsub_bam{
 
@@ -281,9 +306,9 @@ sub bsub_rc{
 
     my $sh_file=$job_files_dir."/".$current_job_file;
 
-
     $bsub_com = "LSF_DOCKER_ENTRYPOINT=/bin/bash LSF_DOCKER_PRESERVE_ENVIRONMENT=false bsub -g /$compute_username/$group_name -q $q_name -n 1 -R \"select[mem>30000] rusage[mem=30000]\" -M 30000000 -a \'docker(scao/dailybox)\' -o $lsf_out -e $lsf_err bash $sh_file\n";
     print $bsub_com;
     system ($bsub_com);
 
-} 
+}
+
