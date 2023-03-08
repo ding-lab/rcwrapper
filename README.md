@@ -9,6 +9,7 @@ please follow work_log_gbm_rc  to submit jobs on compute1
 Tumor and normal bam files and vcf file which contain the following fields:
 
 chr2    233464232       233464234       GCT     -
+
 chr2    233844246       233844246       G       A
 
 ## Contact ##
