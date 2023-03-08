@@ -6,7 +6,7 @@ please follow work_log_gbm_rc  to submit jobs on compute1
 
 ## Input file
 
-Tumor and normal bam files and vcf file which contain the following fields:
+Tumor and normal bam (\*bam) and index files (\*bai) and vcf file which contains the following fields:
 
 chr2    233464232       233464234       GCT     -
 
