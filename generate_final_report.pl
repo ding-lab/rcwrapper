@@ -13,11 +13,17 @@ my $f_sum=$run_dir."/".$working_name.".vaf.summary.tsv\n";
 my $ltr; 
 my $l;
 my $pos; 
-my @t; 
+my @t;
+## normal  
 my %n_r; 
 my %n_v; 
 my %n_vaf; 
 my %n_dep; 
+## tumor
+my %t_r;
+my %t_v;
+my %t_vaf;
+my %t_dep;
 
 open(OUT,">$f_sum");
 
@@ -29,12 +35,10 @@ foreach my $d (`ls $run_dir`)
 	chomp($dtr);
  
         my $f_n_vaf=$run_dir."/".$dtr."/".$dtr.".N.rc.vaf"; 
-	my $f_t_vaf=$run_dir."/".$dtr."/".$dtr.".T.rc.vaf"; 
-	
-	#print $f_n_vaf,"\n"; 
-	#print $f_t_vaf,"\n";
+	my $f_t_vaf=$run_dir."/".$dtr."/".$dtr.".T.rc.vaf"; 	
+	my $f_vcf=$run_dir."/".$dtr."/".$dtr.".rc.vcf"; 
 
-	if(-e $f_n_vaf && -e $f_t_vaf) 
+	if(-e $f_n_vaf) 
 	{
 		foreach $l (`cat $f_n_vaf`) 
 		{ 
@@ -42,27 +46,52 @@ foreach my $d (`ls $run_dir`)
 			chomp($ltr); 
 			@t=split("\t",$ltr); 
 			$pos=$t[1]."_".$t[2]."_".$t[3]."_".$t[4]."_".$t[5]; 
-		#	print $pos,"\n"; 
 			$n_r{$t[0]}{$pos}=$t[7]; 
 			$n_v{$t[0]}{$pos}=$t[8];
 			$n_vaf{$t[0]}{$pos}=$t[9]; 
 			$n_dep{$t[0]}{$pos}=$t[6]; 
      		}
+	}
 
+	if(-e $f_t_vaf)
+	{
 		foreach $l (`cat $f_t_vaf`)
 		{
-		        $ltr=$l;  
-                        chomp($ltr); 
+			$ltr=$l;
+                        chomp($ltr);
                         @t=split("\t",$ltr);
-			$pos=$t[1]."_".$t[2]."_".$t[3]."_".$t[4]."_".$t[5];
-			#print $pos,"\n"; 
-			#<STDIN>;
-	 		if(defined $n_dep{$t[0]}{$pos} && ($n_vaf{$t[0]}{$pos}>0 || $t[9]>0)) { print OUT $ltr,"\t",$n_dep{$t[0]}{$pos},"\t",$n_r{$t[0]}{$pos}, "\t",$n_v{$t[0]}{$pos},"\t",$n_vaf{$t[0]}{$pos},"\n"; }
-			else { if($t[9]>0) { print OUT $ltr,"\t","NA","\t","NA","\t","NA","\t","NA","\n"; }}
-
-			#print OUT $ltr,"\t",$n_dep{$t[0]}{$pos},"\t",$n_r{$t[0]}{$pos},"\t",$n_v{$t[0]}{$pos},"\t",$n_vaf{$t[0]}{$pos},"\n";  	
+                        $pos=$t[1]."_".$t[2]."_".$t[3]."_".$t[4]."_".$t[5];
+			$t_r{$t[0]}{$pos}=$t[7];
+                        $t_v{$t[0]}{$pos}=$t[8];
+                        $t_vaf{$t[0]}{$pos}=$t[9];
+                        $t_dep{$t[0]}{$pos}=$t[6];	
 		}
-	} 
+
+	}
+	
+       foreach $l (`cat $f_vcf`) 
+       {
+	$ltr=$l;
+        chomp($ltr);
+        @t=split("\t",$ltr);
+	$pos=$t[0]."_".$t[1]."_".$t[2]."_".$t[3]."_".$t[4];
+	if(defined $n_r{$dtr} && defined $t_r{$dtr}) 
+	{
+	print $dtr,"\t",$ltr,"\t",$t_dep{$dtr}{$pos},"\t",$t_r{$dtr}{$pos},"\t",$t_v{$dtr}{$pos},"\t",$t_vaf{$dtr}{$pos},"\t",$n_dep{$dtr}{$pos},"\t",$n_r{$dtr}{$pos},"\t",$n_v{$dtr}{$pos},"\t",$n_vaf{$dtr}{$pos},"\n";	
+	}
+	else 
+	{
+	if(defined $n_r{$dtr}) 
+	{
+	    print $dtr,"\t",$ltr,"\t",$t_dep{$dtr}{$pos},"\t",$t_r{$dtr}{$pos},"\t",$t_v{$dtr}{$pos},"\t",$t_vaf{$dtr}{$pos},"\t","NA","\t","NA","\t","NA","\t","NA","\n";   
+	}
+
+	if(defined $t_r{$dtr})
+	{
+	  print $dtr,"\t",$ltr,"\t","NA","\t","NA","\t","NA","\t","NA","\t",$n_dep{$dtr}{$pos},"\t",$n_r{$dtr}{$pos},"\t",$n_v{$dtr}{$pos},"\t",$n_vaf{$dtr}{$pos},"\n"; 	
+	}	
+	}
+       } 
  
 } ##
 

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 #use POSIX;
 use Getopt::Long;
-my $version = 0.1;
+my $version = 1.2;
 #color code
 my $red = "\e[31m";
 my $gray = "\e[37m";
@@ -164,7 +164,7 @@ if($step_number==2)
 
     print $yellow, "Submitting jobs for generating the report for the run ....",$normal, "\n";
     $hold_job_file=$current_job_file; 
-    $current_job_file = "j12_Run_report_".$working_name.".sh"; 
+    $current_job_file = "j2_Run_report_".$working_name.".sh"; 
     my $lsf_out=$lsf_file_dir."/".$current_job_file.".out";
     my $lsf_err=$lsf_file_dir."/".$current_job_file.".err";
     `rm $lsf_out`;
@@ -197,18 +197,6 @@ sub bsub_bam{
     }
     my $IN_bam_T = $sample_full_path."/".$sample_name.".T.bam";
     my $IN_bam_N = $sample_full_path."/".$sample_name.".N.bam";
-
-#    if (! -e $IN_bam_N) {#make sure there is a input fasta file 
-#        print $red,  "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n";
-#        print "Warning: Died because there is no input bam file for bwa:\n";
-#        print "File $IN_bam_N does not exist!\n";
-#        die "Please check command line argument!", $normal, "\n\n";
-
- #   }
- #   if (! -s $IN_bam_N) {#make sure input fasta file is not empty
- #       print $red, "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n";
- #       die "Warning: Died because $IN_bam_N is empty!", $normal, "\n\n";
- #   }
 
     open(BAM, ">$job_files_dir/$current_job_file") or die $!;
     print BAM "#!/bin/bash\n";
