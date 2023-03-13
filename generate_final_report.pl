@@ -57,8 +57,8 @@ foreach my $d (`ls $run_dir`)
 			$pos=$t[1]."_".$t[2]."_".$t[3]."_".$t[4]."_".$t[5];
 			#print $pos,"\n"; 
 			#<STDIN>;
-	 		if(defined $n_dep{$t[0]}{$pos} && ($n_vaf{$t[0]}{$pos}>0 || $t[9]>0)) { print OUT $ltr,"\t",$n_dep{$t[0]}{$pos},"\t",$n_r{$t[0]}{$pos}, "\t",$n_v{$t[0]}{$pos},"\t",$n_vaf{$t[0]}{$pos},"\n"; }
-			else { if($t[9]>0) { print OUT $ltr,"\t","NA","\t","NA","\t","NA","\t","NA","\n"; }}
+	 		if(defined $n_dep{$t[0]}{$pos} && ($n_vaf{$t[0]}{$pos}>=0 || $t[9]>=0)) { print OUT $ltr,"\t",$n_dep{$t[0]}{$pos},"\t",$n_r{$t[0]}{$pos}, "\t",$n_v{$t[0]}{$pos},"\t",$n_vaf{$t[0]}{$pos},"\n"; }
+			else { if($t[9]>=0) { print OUT $ltr,"\t","NA","\t","NA","\t","NA","\t","NA","\n"; }}
 
 			#print OUT $ltr,"\t",$n_dep{$t[0]}{$pos},"\t",$n_r{$t[0]}{$pos},"\t",$n_v{$t[0]}{$pos},"\t",$n_vaf{$t[0]}{$pos},"\n";  	
 		}

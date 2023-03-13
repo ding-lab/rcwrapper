@@ -164,7 +164,7 @@ if($step_number==2)
 
     print $yellow, "Submitting jobs for generating the report for the run ....",$normal, "\n";
     $hold_job_file=$current_job_file; 
-    $current_job_file = "j12_Run_report_".$working_name.".sh"; 
+    $current_job_file = "j2_Run_report_".$working_name.".sh"; 
     my $lsf_out=$lsf_file_dir."/".$current_job_file.".out";
     my $lsf_err=$lsf_file_dir."/".$current_job_file.".err";
     `rm $lsf_out`;
