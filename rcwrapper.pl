@@ -169,7 +169,7 @@ if($step_number==2)
     my $lsf_err=$lsf_file_dir."/".$current_job_file.".err";
     `rm $lsf_out`;
     `rm $lsf_err`;
-    `rm $current_job_file`;
+    #`rm $current_job_file`;
     my $working_name= (split(/\//,$run_dir))[-1];
     open(REPRUN, ">$job_files_dir/$current_job_file") or die $!;
     print REPRUN "#!/bin/bash\n";
