@@ -80,7 +80,7 @@ foreach my $d (`ls $run_dir`)
         chomp($ltr);
         @t=split("\t",$ltr);
 	$pos=$t[0]."_".$t[1]."_".$t[2]."_".$t[3]."_".$t[4];
-	if(defined $n_v{$dtr}>=2 && defined $t_r{$dtr}>=2) 
+	if(defined $n_v{$dtr} && (defined $t_r{$dtr})) 
 	{
 	print OUT $dtr,"\t",$ltr,"\t",$t_dep{$dtr}{$pos},"\t",$t_r{$dtr}{$pos},"\t",$t_v{$dtr}{$pos},"\t",$t_vaf{$dtr}{$pos},"\t",$n_dep{$dtr}{$pos},"\t",$n_r{$dtr}{$pos},"\t",$n_v{$dtr}{$pos},"\t",$n_vaf{$dtr}{$pos},"\n";	
 	if($t_v{$dtr}{$pos}>=2 && $n_v{$dtr}{$pos}>=2) 
