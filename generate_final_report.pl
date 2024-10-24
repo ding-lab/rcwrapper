@@ -38,8 +38,9 @@ foreach my $d (`ls $run_dir`)
 {
   	my $dtr=$d; 
 	chomp($dtr);
- 
-        my $f_n_vaf=$run_dir."/".$dtr."/".$dtr.".N.rc.vaf"; 
+	if(-d $run_dir."/".$dtr)
+	{
+    my $f_n_vaf=$run_dir."/".$dtr."/".$dtr.".N.rc.vaf"; 
 	my $f_t_vaf=$run_dir."/".$dtr."/".$dtr.".T.rc.vaf"; 	
 	my $f_vcf=$run_dir."/".$dtr."/".$dtr.".rc.vcf"; 
 
@@ -80,28 +81,38 @@ foreach my $d (`ls $run_dir`)
         chomp($ltr);
         @t=split("\t",$ltr);
 	$pos=$t[0]."_".$t[1]."_".$t[2]."_".$t[3]."_".$t[4];
-	if(defined $n_v{$dtr} && (defined $t_r{$dtr})) 
+	if(defined $n_v{$dtr}  && defined $t_r{$dtr}) 
+	{
+	#print $dtr,"\t",$pos,"\n";
+	if((defined $n_dep{$dtr}{$pos} && $n_dep{$dtr}{$pos}>=1)  && (defined $t_dep{$dtr}{$pos} && $t_dep{$dtr}{$pos}>=1))
 	{
 	print OUT $dtr,"\t",$ltr,"\t",$t_dep{$dtr}{$pos},"\t",$t_r{$dtr}{$pos},"\t",$t_v{$dtr}{$pos},"\t",$t_vaf{$dtr}{$pos},"\t",$n_dep{$dtr}{$pos},"\t",$n_r{$dtr}{$pos},"\t",$n_v{$dtr}{$pos},"\t",$n_vaf{$dtr}{$pos},"\n";	
-	if($t_v{$dtr}{$pos}>=2 && $n_v{$dtr}{$pos}>=2) 
+	}
+	if((defined $t_dep{$dtr}{$pos} && $t_v{$dtr}{$pos}>=2) && (defined $n_dep{$dtr}{$pos} && $n_v{$dtr}{$pos}>=2)) 
 	{
 	print OUTF $dtr,"\t",$ltr,"\t",$t_dep{$dtr}{$pos},"\t",$t_r{$dtr}{$pos},"\t",$t_v{$dtr}{$pos},"\t",$t_vaf{$dtr}{$pos},"\t",$n_dep{$dtr}{$pos},"\t",$n_r{$dtr}{$pos},"\t",$n_v{$dtr}{$pos},"\t",$n_vaf{$dtr}{$pos},"\n";
 	}
 	}
 	else 
 	{
-	if(defined $t_v{$dtr}) 
+	if( defined $t_v{$dtr} && defined $t_dep{$dtr}{$pos}) 
 	{
+		if($t_dep{$dtr}{$pos}>=1)
+		{
 	    print OUT $dtr,"\t",$ltr,"\t",$t_dep{$dtr}{$pos},"\t",$t_r{$dtr}{$pos},"\t",$t_v{$dtr}{$pos},"\t",$t_vaf{$dtr}{$pos},"\t","NA","\t","NA","\t","NA","\t","NA","\n";  
+		}
 	if($t_v{$dtr}{$pos}>=2)
 	  {
             print OUTF $dtr,"\t",$ltr,"\t",$t_dep{$dtr}{$pos},"\t",$t_r{$dtr}{$pos},"\t",$t_v{$dtr}{$pos},"\t",$t_vaf{$dtr}{$pos},"\t","NA","\t","NA","\t","NA","\t","NA","\n";
 		} 
 	}
 
-	if(defined $n_v{$dtr})
+	if(defined $n_v{$dtr} && defined $n_dep{$dtr}{$pos})
 	{
-	  print OUT $dtr,"\t",$ltr,"\t","NA","\t","NA","\t","NA","\t","NA","\t",$n_dep{$dtr}{$pos},"\t",$n_r{$dtr}{$pos},"\t",$n_v{$dtr}{$pos},"\t",$n_vaf{$dtr}{$pos},"\n"; 	
+	  if($n_dep{$dtr}{$pos}>=1)
+	  {	
+	  print OUT $dtr,"\t",$ltr,"\t","NA","\t","NA","\t","NA","\t","NA","\t",$n_dep{$dtr}{$pos},"\t",$n_r{$dtr}{$pos},"\t",$n_v{$dtr}{$pos},"\t",$n_vaf{$dtr}{$pos},"\n"; 
+	  }	
 	if($n_v{$dtr}{$pos}>=2) 
 	{
 	  print OUTF $dtr,"\t",$ltr,"\t","NA","\t","NA","\t","NA","\t","NA","\t",$n_dep{$dtr}{$pos},"\t",$n_r{$dtr}{$pos},"\t",$n_v{$dtr}{$pos},"\t",$n_vaf{$dtr}{$pos},"\n";
@@ -109,6 +120,7 @@ foreach my $d (`ls $run_dir`)
 	}	
 	}
        } 
+	}
  
 } ##
 
